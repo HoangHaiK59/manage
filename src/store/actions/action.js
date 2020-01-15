@@ -64,7 +64,7 @@ const signin = () => {
                     )
 
                     history.push('/dashboard');
-                }, { scope: 'email, manage_pages,pages_messaging, publish_pages, pages_show_list' })
+                }, { scope: 'email, manage_pages,pages_messaging, pages_show_list' })
             }
         });
     }
