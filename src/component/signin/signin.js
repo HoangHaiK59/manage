@@ -9,7 +9,7 @@ const IconFont = Icon.createFromIconfontCN({
 
 
 const Signin = props => {
-    const { signin } = props;
+    const { signin, signout } = props;
     const handleLogin = (event) => {
         event.preventDefault();
         signin();
@@ -22,6 +22,11 @@ const Signin = props => {
         <IconFont type="icon-facebook"/>
         Login with Facebook
         </Button>
+        <Button 
+        onClick={signout}>
+        <IconFont type="icon-facebook"/>
+        Logout
+        </Button>
     </div>
 };
 
@@ -33,7 +38,8 @@ const mapState = (state) => (
 
 const mapDispatch = dispatch => (
     {
-        signin:  () => dispatch(action.signin())
+        signin:  () => dispatch(action.signin()),
+        signout:  () => dispatch(action.signout())
     }
 )
 
