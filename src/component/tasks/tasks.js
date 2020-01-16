@@ -1,5 +1,5 @@
 import React from 'react';
-import { useUpdateTitle } from '../../utils';
+import { useUpdateTitle, useVerify } from '../../utils';
 import { Loading } from '../content/loading/loading';
 
 const useFetch = (pageID, access_token) => {
@@ -21,8 +21,9 @@ const useFetch = (pageID, access_token) => {
     return response;
 }
 
-const Tasks = ({title, loginStatus}) => {
+const Tasks = ({title, loginStatus, handleVerify}) => {
     useUpdateTitle(title);
+    useVerify(() => handleVerify(loginStatus.authResponse.accessToken));
     const response = useFetch('111876070200048', loginStatus.authResponse.accessToken);
     if(response )
     return <div>

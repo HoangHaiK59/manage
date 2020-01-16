@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import {Breadcrumb} from 'antd';
 
-export const PrivateRoute = ({component: Component,title,isAuth,loginStatus, ...rest}) => {
+export const PrivateRoute = ({component: Component,title,isAuth,loginStatus, handleVerify, ...rest}) => {
     return <Fragment>
         <div>
             {
@@ -17,7 +17,7 @@ export const PrivateRoute = ({component: Component,title,isAuth,loginStatus, ...
         {
             <Route {...rest} render={props => 
                 isAuth|| loginStatus ?
-                    <Component {...props} title={title} loginStatus = {loginStatus} />
+                    <Component {...props} title={title} handleVerify={handleVerify} loginStatus = {loginStatus} />
                 : <Redirect to={{pathname: '/', state: {from: props.location}}} />
             } />
         }

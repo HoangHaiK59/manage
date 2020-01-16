@@ -29,6 +29,7 @@ const Container = props => {
     }
 
     const handleVerify = (token) => {
+        if(token === '') return ;
         window.FB.api(
             `/debug_token`,
             'GET',
@@ -37,8 +38,8 @@ const Container = props => {
                 access_token: '510765909792429|bc9576b974be7435f3df39bc2152473b'
             },
             function(response) {
-                console.log(response)
-                if(!response.data) {
+                if(!response.data || response.error) {
+                    signout();
                     history.push('/');
                 }
             }
@@ -58,11 +59,11 @@ const Container = props => {
                     <div className="container">
                         <Switch>
                             <PublicRoute path="/" title="Signin" component={Signin} restricted={false} exact/>
-                            <PrivateRoute path="/dashboard" title="Dashboard" isAuth={true} loginStatus={loginStatus} handleVerify={handleVerify} component={Dashboard} exact />
-                            <PrivateRoute path="/store" title="Store" isAuth={isAuth} loginStatus={loginStatus} handleVerify={handleVerify} component={Store} exact />
-                            <PrivateRoute path="/tasks" title="Tasks" isAuth={isAuth} loginStatus={loginStatus}  handleVerify={handleVerify} component={Tasks} exact />
-                            <PrivateRoute path="/posts" loginStatus={loginStatus} isAuth={isAuth} handleVerify={handleVerify} title="Posts" component={Posts} exact />
-                            <PrivateRoute path="/analystic" loginStatus={loginStatus} isAuth={isAuth} handleVerify={handleVerify} title="Analystic" component={Analystic} exact />
+                            <PrivateRoute path="/dashboard" title="Dashboard" isAuth={true} loginStatus={loginStatus} handleVerify={handleVerify}  component={Dashboard} exact />
+                            <PrivateRoute path="/store" title="Store" isAuth={isAuth} loginStatus={loginStatus} handleVerify={handleVerify}  component={Store} exact />
+                            <PrivateRoute path="/tasks" title="Tasks" isAuth={isAuth} loginStatus={loginStatus} handleVerify={handleVerify}  component={Tasks} exact />
+                            <PrivateRoute path="/posts" loginStatus={loginStatus} isAuth={isAuth}  title="Posts" handleVerify={handleVerify} component={Posts} exact />
+                            <PrivateRoute path="/analystic" loginStatus={loginStatus} isAuth={isAuth}  title="Analystic" handleVerify={handleVerify} component={Analystic} exact />
                         </Switch>
                     </div>
                 </Col>

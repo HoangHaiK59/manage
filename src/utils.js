@@ -10,3 +10,9 @@ export const useUpdateTitle = title => {
 export const IconFont = Icon.createFromIconfontCN({
     scriptUrl: '//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js',
 });
+
+export const useVerify = fn => {
+    React.useEffect(() => {
+        fn();
+    },[fn])
+}

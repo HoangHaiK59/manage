@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Descriptions } from 'antd';
-import { useUpdateTitle } from '../../utils';
+import { useUpdateTitle, useVerify } from '../../utils';
 import { Loading } from '../content/loading/loading';
 
 import { Tabs, List } from 'antd';
@@ -44,8 +44,9 @@ const useFetchRating = (pageId, access_token) => {
     return response;
 }
 
-const Store = ({ title, loginStatus }) => {
+const Store = ({ title, loginStatus, handleVerify }) => {
     useUpdateTitle(title);
+    useVerify(() => handleVerify(loginStatus.authResponse.accessToken));
     const response = useFetch('111876070200048', loginStatus.authResponse.accessToken);
     const rating = useFetchRating('111876070200048', loginStatus.authResponse.accessToken);
     console.log(rating)

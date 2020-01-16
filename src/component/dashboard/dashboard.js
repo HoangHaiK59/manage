@@ -1,10 +1,12 @@
 import React from 'react';
 import { Card, Col, Row, Icon } from 'antd';
 import { NavLink } from 'react-router-dom';
-import { useUpdateTitle } from '../../utils';
+import { useUpdateTitle, useVerify } from '../../utils';
 
-const Dashboard = ({title}) => {
+const Dashboard = ({title, loginStatus,handleVerify}) => {
     useUpdateTitle(title);
+    useVerify(() => handleVerify(loginStatus ? loginStatus.authResponse.accessToken: ''));
+    //handleVerify(loginStatus.authResponse.token);
     return <div style={{ position: 'absolute', top: '50%', left: '50%', width: '95%', transform: 'translate(-50%,-50%)' }}>
         <Row draggable gutter={16}>
             <Col span={8}>
