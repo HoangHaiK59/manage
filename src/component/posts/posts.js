@@ -1,5 +1,6 @@
 import React from 'react';
 import {List} from 'antd';
+import { useUpdateTitle } from '../../utils';
 
 const useFetchPosts = (pageId, access_token) => {
     const [response, setResponse] = React.useState(null);
@@ -19,9 +20,9 @@ const useFetchPosts = (pageId, access_token) => {
     return response;
 }
 
-const Posts = (props) => {
-    const response = useFetchPosts('111876070200048',props.loginStatus.authResponse.accessToken);
-    console.log(props)
+const Posts = ({title,loginStatus}) => {
+    useUpdateTitle(title);
+    const response = useFetchPosts('111876070200048',loginStatus.authResponse.accessToken);
     if(response)
     return <div style={{marginTop:10,maxHeight: 700,overflow: 'auto'}}>
     <List 

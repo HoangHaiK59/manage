@@ -1,9 +1,11 @@
 import React from 'react';
 import { Card, Col, Row, Icon } from 'antd';
 import { NavLink } from 'react-router-dom';
+import { useUpdateTitle } from '../../utils';
 
-const Dashboard = props => {
-    return <div style={{ position: 'absolute', top: '50%', left: '50%', width: '100%', transform: 'translate(-50%,-50%)' }}>
+const Dashboard = ({title}) => {
+    useUpdateTitle(title);
+    return <div style={{ position: 'absolute', top: '50%', left: '50%', width: '95%', transform: 'translate(-50%,-50%)' }}>
         <Row draggable gutter={16}>
             <Col span={8}>
                 <Card 
@@ -23,7 +25,12 @@ const Dashboard = props => {
                 style={{height: 150}} 
                 hoverable 
                 title="Analystic" 
-                bordered={true}>
+                bordered={true}
+                extra={
+                    <NavLink to="/analystic">
+                        <Icon key="ellipsis" type="ellipsis"/>
+                    </NavLink>
+                }>
                     View analystic
                 </Card>
             </Col>
@@ -64,12 +71,12 @@ const Dashboard = props => {
             <Col span={8}>
                 <Card  
                 style={{height: 150}}
-                hoverable title="Page Infomation" 
+                hoverable title="Store" 
                 bordered={true} 
-                extra={<NavLink to="/pageinfo">
+                extra={<NavLink to="/store">
                     <Icon key="ellipsis" type="ellipsis"/>
                 </NavLink>}>
-                    View page infomation
+                    View rating and infomation
             </Card>
             </Col>
         </Row>

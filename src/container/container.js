@@ -1,22 +1,20 @@
 import React from 'react';
-import { Layout, Row, Col, Icon } from 'antd';
+import { Layout, Row, Col } from 'antd';
 import Navigation from '../component/navigation/navigation';
-import { Switch, Route } from 'react-router-dom';
+import { Switch } from 'react-router-dom';
 import { PrivateRoute } from '../Route/privateRoute';
 import { PublicRoute } from '../Route/publicRoute';
 import Signin from '../component/signin/signin';
 import Dashboard from '../component/dashboard/dashboard';
-import PageInfo from '../component/pageinfo/pageinfo';
+import Store from '../component/shustore/shustore';
 import Tasks from '../component/tasks/tasks';
-import { isLogin } from '../utils';
 import Posts from '../component/posts/posts';
 import { connect } from 'react-redux';
 import { action } from '../store/actions/action';
+import { history } from '../helper/history';
+import { IconFont } from '../utils';
+import Analystic from '../component/analystic/analystic';
 const { Content, Footer } = Layout;
-
-const IconFont = Icon.createFromIconfontCN({
-    scriptUrl: '//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js',
-  });
 
 const Container = props => {
     const [visible, setVisible] = React.useState(false);
@@ -29,7 +27,24 @@ const Container = props => {
         signout();
         //handleActive();
     }
-    console.log(props)
+
+    const handleVerify = (token) => {
+        window.FB.api(
+            `/debug_token`,
+            'GET',
+            {
+                input_token: token,
+                access_token: '510765909792429|bc9576b974be7435f3df39bc2152473b'
+            },
+            function(response) {
+                console.log(response)
+                if(!response.data) {
+                    history.push('/');
+                }
+            }
+        )
+    }
+
     return <Layout className="layout">
         <Content>
             <Row>
@@ -39,14 +54,15 @@ const Container = props => {
                 <Col span={1}>
                     {loginStatus ? <Navigation handleSignout={handleSignout} disableNavigation={handleActive}/>: null}
                 </Col>
-                <Col span={23}>
-                    <div style={{ background: '#fff', margin: '20px 0 0 0', padding: 24, minHeight: 900, position: 'relative' }}>
+                <Col span={23} id="mainview">
+                    <div className="container">
                         <Switch>
-                            <Route path="/" render={() => <Signin />} exact />
-                            <PrivateRoute path="/dashboard" title="Dashboard" isAuth={true} component={Dashboard} exact />
-                            <PrivateRoute path="/pageinfo" title="Page Infomation" isAuth={isAuth} component={PageInfo} exact />
-                            <PrivateRoute path="/tasks" title="Tasks" isAuth={isAuth} component={Tasks} exact />
-                            <PrivateRoute path="/posts" loginStatus={loginStatus} isAuth={isAuth} title="Posts" component={Posts} exact />
+                            <PublicRoute path="/" title="Signin" component={Signin} restricted={false} exact/>
+                            <PrivateRoute path="/dashboard" title="Dashboard" isAuth={true} loginStatus={loginStatus} handleVerify={handleVerify} component={Dashboard} exact />
+                            <PrivateRoute path="/store" title="Store" isAuth={isAuth} loginStatus={loginStatus} handleVerify={handleVerify} component={Store} exact />
+                            <PrivateRoute path="/tasks" title="Tasks" isAuth={isAuth} loginStatus={loginStatus}  handleVerify={handleVerify} component={Tasks} exact />
+                            <PrivateRoute path="/posts" loginStatus={loginStatus} isAuth={isAuth} handleVerify={handleVerify} title="Posts" component={Posts} exact />
+                            <PrivateRoute path="/analystic" loginStatus={loginStatus} isAuth={isAuth} handleVerify={handleVerify} title="Analystic" component={Analystic} exact />
                         </Switch>
                     </div>
                 </Col>
@@ -54,7 +70,7 @@ const Container = props => {
 
         </Content>
         <Footer style={{ textAlign: 'center' }}>
-            <IconFont type="icon-facebook"/> Manager facebook page
+            <IconFont type="icon-facebook"/> SHU Store 
         </Footer>
     </Layout>
 }
@@ -62,7 +78,6 @@ const Container = props => {
 const mapState = state => ({
     isAuth: state.facebook.isAuth,
     loginStatus: state.facebook.loginStatus,
-    appInfo: state.facebook.appInfo
 });
 
 const mapDispatch = dispatch => ({

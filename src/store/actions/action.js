@@ -1,8 +1,6 @@
 import { Constants } from '../define';
 import {history} from '../../helper/history';
 
-import {verifyToken, getAppToken} from '../../utils';
-
 const signinRequest = () => {
     return {
         type: Constants.SIGNIN_REQUEST
@@ -62,7 +60,6 @@ const signin = () => {
                                 dispatch(signinError({message: 'debug token fail'}))
                         }
                     )
-
                     history.push('/dashboard');
                 }, { scope: 'email, manage_pages,pages_messaging, pages_show_list' })
             }

@@ -6,9 +6,9 @@ import App from './App';
 import { history } from './helper/history';
 import { Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
-import rootReducer from './store/reducers';
+// import { createStore, applyMiddleware } from 'redux';
+// import thunk from 'redux-thunk';
+// import rootReducer from './store/reducers';
 import configStore from './store/configStore';
 import * as serviceWorker from './serviceWorker';
 
