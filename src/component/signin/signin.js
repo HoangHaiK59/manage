@@ -20,6 +20,11 @@ const Signin = ({title, ...props}) => {
         <IconFont type="icon-facebook"/>
         Login with Facebook
         </Button>
+        <Button 
+        onClick={props.signout}>
+        <IconFont type="icon-facebook"/>
+        Logout
+        </Button>
     </div>
 };
 
@@ -32,7 +37,7 @@ const mapState = (state) => (
 const mapDispatch = dispatch => (
     {
         signin:  () => dispatch(action.signin()),
-        //signout:  () => dispatch(action.signout())
+        signout:  () => dispatch(action.signout())
     }
 )
 
