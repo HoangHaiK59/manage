@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Pagination, Row, Col, Button } from 'antd';
+import { List, Row, Col, Button } from 'antd';
 import { useUpdateTitle, useVerify } from '../../utils';
 import { Loading } from '../content/loading/loading';
 

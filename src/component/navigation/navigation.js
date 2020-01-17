@@ -71,6 +71,9 @@ const Navigation = ({disableNavigation, handleSignout}) => {
             <NavLink className="ant-link" to='/dashboard'>Analystic</NavLink>
           </Menu.Item>
           <Menu.Item>
+            <NavLink className="ant-link" to='/creative'>Creative</NavLink>
+          </Menu.Item>
+          <Menu.Item>
             <NavLink className="ant-link" to='/posts'>Posts</NavLink>
           </Menu.Item>
           <Menu.Item>

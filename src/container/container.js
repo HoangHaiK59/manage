@@ -14,6 +14,8 @@ import { action } from '../store/actions/action';
 import { history } from '../helper/history';
 import { IconFont } from '../utils';
 import Analystic from '../component/analystic/analystic';
+import Creative from '../component/creative/creative';
+import Unpublish from '../component/content/unpublish/unpublish';
 const { Content, Footer } = Layout;
 
 const Container = props => {
@@ -64,6 +66,8 @@ const Container = props => {
                             <PrivateRoute path="/tasks" title="Tasks" isAuth={isAuth} loginStatus={loginStatus} handleVerify={handleVerify}  component={Tasks} exact />
                             <PrivateRoute path="/posts" loginStatus={loginStatus} isAuth={isAuth}  title="Posts" handleVerify={handleVerify} component={Posts} exact />
                             <PrivateRoute path="/analystic" loginStatus={loginStatus} isAuth={isAuth}  title="Analystic" handleVerify={handleVerify} component={Analystic} exact />
+                            <PrivateRoute path="/creative" loginStatus={loginStatus} isAuth={isAuth}  title="Creative" handleVerify={handleVerify} component={Creative} exact />
+                            <PrivateRoute path="/creative/unpublish" loginStatus={loginStatus} isAuth={isAuth}  title="Unpublish" handleVerify={handleVerify} component={Unpublish} exact />
                         </Switch>
                     </div>
                 </Col>

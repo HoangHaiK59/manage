@@ -1,7 +1,11 @@
 import React from 'react';
 import {List} from 'antd';
+import { connect } from 'react-redux';
+import { useUpdateTitle } from '../../utils';
 
-const About = ({appInfo}) => {
+const About = ({title, ...props}) => {
+    useUpdateTitle(title);
+    const {appInfo} = props;
     const getDataSource = (data) => {
         let dataSource = [];
         let keys = Object.keys(data).filter(key => 
@@ -19,6 +23,10 @@ const About = ({appInfo}) => {
     </div>
 } 
 
-const 
+const mapState = state => ({
+  appInfo: state.facebook.appInfo
+});
 
-export default About;
+const mapDispatch = dispatch => ({});
+
+export default connect(mapState, mapDispatch)(About);

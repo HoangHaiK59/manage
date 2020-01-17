@@ -4,6 +4,7 @@ const initState = {
     isAuth: false,
     loginStatus: null,
     appInfo: null,
+    unPublishs: [],
     error: null
 };
 
@@ -27,6 +28,22 @@ const reducer = (state = initState, action) => {
         case Constants.SIGNOUT:
             return {
                 ...initState
+            }
+        case Constants.ADD_UNPUBLISH:
+            console.log(action)
+            return {
+                ...state,
+                unPublishs: state.unPublishs.concat(action.post)
+            }
+        case Constants.REMOVE_ONE_UNPUBLISH:
+            return {
+                ...state,
+                unPublishs: state.unPublishs.filter(post => post.id !== action.id)
+            }
+        case Constants.CLEAR_UNPUBLISH:
+            return {
+                ...state,
+                unPublishs: []
             }
         default:
             return state;

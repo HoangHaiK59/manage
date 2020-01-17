@@ -1,42 +1,47 @@
 import React from 'react';
-import { Card, Col, Row, Icon } from 'antd';
-import { NavLink } from 'react-router-dom';
+import { Card, Col, Row } from 'antd';
 import { useUpdateTitle, useVerify } from '../../utils';
 
-const Dashboard = ({title, loginStatus,handleVerify}) => {
+const Dashboard = ({title, loginStatus,handleVerify, history}) => {
     useUpdateTitle(title);
     useVerify(() => handleVerify(loginStatus ? loginStatus.authResponse.accessToken: ''));
     //handleVerify(loginStatus.authResponse.token);
     return <div style={{ position: 'absolute', top: '50%', left: '50%', width: '95%', transform: 'translate(-50%,-50%)' }}>
         <Row draggable gutter={16}>
-            <Col span={8}>
+            <Col span={6}>
                 <Card 
+                onClick={() => history.push('/posts')}
                 style={{height: 150}} 
                 hoverable 
                 title="Posts" 
                 bordered={true}
-                extra={<NavLink to="/posts">
-                    <Icon key="ellipsis" type="ellipsis"/>
-                </NavLink>}
                 >
                     View all posts
                 </Card>
             </Col>
-            <Col  span={8}>
+            <Col  span={6}>
+                <Card 
+                style={{height: 150}} 
+                hoverable 
+                title="Creative" 
+                bordered={true}
+                onClick={() => history.push('/creative')}
+                >
+                    Creative content
+                </Card>
+            </Col>
+            <Col  span={6}>
                 <Card 
                 style={{height: 150}} 
                 hoverable 
                 title="Analystic" 
                 bordered={true}
-                extra={
-                    <NavLink to="/analystic">
-                        <Icon key="ellipsis" type="ellipsis"/>
-                    </NavLink>
-                }>
+                onClick={() => history.push('/analystic')}
+                >
                     View analystic
                 </Card>
             </Col>
-            <Col span={8}>
+            <Col span={6}>
                 <Card 
                 style={{height: 150}} 
                 hoverable title="Albums" 
@@ -46,38 +51,34 @@ const Dashboard = ({title, loginStatus,handleVerify}) => {
             </Col>
         </Row>
         <Row style={{marginTop: 20}} draggable gutter={16}>
-            <Col span={8}>
+            <Col span={6}>
                 <Card 
                 style={{height: 150}} 
                 hoverable 
                 title="About" 
                 bordered={true} 
-                extra={<NavLink to="/about">
-                    <Icon key="ellipsis" type="ellipsis"/>
-                </NavLink>}
+                onClick={() => history.push('/about')}
                 >
                     About application
             </Card>
             </Col>
-            <Col span={8}>
+            <Col span={6}>
                 <Card style={{height: 150}} 
                 hoverable 
                 title="Tasks Perform" 
                 bordered={true} 
-                extra={<NavLink to="/tasks">
-                    <Icon key="ellipsis" type="ellipsis"/>
-                </NavLink>}>
+                onClick={() => history.push('/tasks')}
+                >
                     View tasks a user can perform on page
             </Card>
             </Col>
-            <Col span={8}>
+            <Col span={6}>
                 <Card  
                 style={{height: 150}}
                 hoverable title="Store" 
                 bordered={true} 
-                extra={<NavLink to="/store">
-                    <Icon key="ellipsis" type="ellipsis"/>
-                </NavLink>}>
+                onClick={() => history.push('/store')}
+                >
                     View rating and infomation
             </Card>
             </Col>
