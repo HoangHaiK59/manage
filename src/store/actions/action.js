@@ -1,5 +1,6 @@
 import { Constants } from '../define';
 import {history} from '../../helper/history';
+import {axiosClient} from '../../helper/axios';
 
 const signinRequest = () => {
     return {
@@ -79,8 +80,42 @@ const signout = () => {
     }
 }
 
+const addUnpublishReq = () => {
+    return {
+        type: Constants.ADD_UNPUBLISH_REQ
+    }
+}
+
+const addUnpublishSuccess = (creatives) => {
+    return {
+        type: Constants.ADD_UNPUBLISH_SUCCESS,
+        creatives: creatives
+    }
+}
+
+const addUnpublishError = (error) => {
+    return {
+        type: Constants.ADD_UNPUBLISH_ERROR,
+        error: error
+    }
+}
+
+const addUnpublish = (post) => {
+    return dispatch => {
+        dispatch(addUnpublishReq())
+        axiosClient.post('http://localhost:8000/unpublish', {
+            params: {
+                post: post
+            }
+        })
+        .then(res => {console.log(res);dispatch(addUnpublishSuccess(post))})
+        .catch(err => {console.log(err);dispatch(addUnpublishError(err))})
+        }
+}
+
 
 export const action = {
     signin,
-    signout
+    signout, 
+    addUnpublish
 };

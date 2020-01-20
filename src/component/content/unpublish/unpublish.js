@@ -4,6 +4,7 @@ import { Constants } from '../../../store/define';
 import { connect } from 'react-redux';
 import UnPublishModal from '../modal/unpublish/unpublish';
 import { useUpdateTitle } from '../../../utils';
+import { action } from '../../../store/actions/action';
 
 let count = 0;
 
@@ -38,7 +39,8 @@ const UnPublish = props => {
         count += 1;
         props.addUnPublish({
             id: count,
-            message: message
+            message: message,
+            type: 'unpublish'
         }
         );
     }
@@ -73,7 +75,7 @@ const UnPublish = props => {
         <Alert message="Error" banner closable type="error"/>
     )
 
-    const { unPublishs } = props;
+    const { creatives } = props;
 
     const modal = (
         <div>
@@ -92,7 +94,7 @@ const UnPublish = props => {
     );
 
 
-        if (unPublishs.length === 0) {
+        if (creatives.length === 0) {
             return <div style={{ marginTop: 20 }}>
                 {visible ? modal : null}
                 <Row gutter={16} style={{ textAlign: 'end' }}>
@@ -130,7 +132,7 @@ const UnPublish = props => {
                 <Row gutter={16}>
                     <Col span={24}>
                         <List
-                            dataSource={unPublishs}
+                            dataSource={creatives}
                             renderItem={item => (
                                 <List.Item key={item.id}>
                                     <List.Item.Meta
@@ -158,11 +160,12 @@ const UnPublish = props => {
 }
 
 const mapState = state => ({
-    unPublishs: state.facebook.unPublishs
+    creatives: state.facebook.creatives
 });
 
 const mapDispatch = dispatch => ({
-    addUnPublish: (post) => dispatch({ type: Constants.ADD_UNPUBLISH, post: post }),
+    //addUnPublish: (post) => dispatch({ type: Constants.ADD_UNPUBLISH, post: post }),
+    addUnPublish: (post) => dispatch(action.addUnpublish(post)),
     removeOneUnpublish: (id) => dispatch({ type: Constants.REMOVE_ONE_UNPUBLISH, id: id }),
     clearUnPublish: () => dispatch({ type: Constants.CLEAR_UNPUBLISH })
 })

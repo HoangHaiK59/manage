@@ -4,8 +4,8 @@ const initState = {
     isAuth: false,
     loginStatus: null,
     appInfo: null,
-    unPublishs: [],
-    error: null
+    creatives: [],
+    error: null, 
 };
 
 const reducer = (state = initState, action) => {
@@ -30,21 +30,34 @@ const reducer = (state = initState, action) => {
                 ...initState
             }
         case Constants.ADD_UNPUBLISH:
-            console.log(action)
             return {
                 ...state,
-                unPublishs: state.unPublishs.concat(action.post)
+                creatives: state.creatives.concat(action.post)
             }
         case Constants.REMOVE_ONE_UNPUBLISH:
             return {
                 ...state,
-                unPublishs: state.unPublishs.filter(post => post.id !== action.id)
+                creatives: state.creatives.filter(post => post.id !== action.id)
             }
         case Constants.CLEAR_UNPUBLISH:
             return {
                 ...state,
-                unPublishs: []
+                creatives: []
             }
+        case Constants.ADD_UNPUBLISH_REQ: 
+        return {
+            ...state
+        }
+        case Constants.ADD_UNPUBLISH_SUCCESS: 
+        return {
+            ...state,
+            creatives: state.creatives.concat(action.creatives)
+        }
+        case Constants.ADD_UNPUBLISH_ERROR: 
+        return {
+            ...state,
+            error: action.error
+        }
         default:
             return state;
     }
