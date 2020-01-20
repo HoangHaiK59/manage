@@ -86,10 +86,9 @@ const addUnpublishReq = () => {
     }
 }
 
-const addUnpublishSuccess = (creatives) => {
+const addUnpublishSuccess = () => {
     return {
         type: Constants.ADD_UNPUBLISH_SUCCESS,
-        creatives: creatives
     }
 }
 
@@ -100,22 +99,133 @@ const addUnpublishError = (error) => {
     }
 }
 
-const addUnpublish = (post) => {
+const addUnpublish = (unpublish) => {
     return dispatch => {
         dispatch(addUnpublishReq())
-        axiosClient.post('http://localhost:8000/unpublish', {
+        axiosClient.post('/v1/unpublish/new', {
             params: {
-                post: post
+                unpublish: unpublish
             }
         })
-        .then(res => {console.log(res);dispatch(addUnpublishSuccess(post))})
+        .then(res => {
+            console.log(res);
+            dispatch(addUnpublishSuccess()); 
+        })
         .catch(err => {console.log(err);dispatch(addUnpublishError(err))})
         }
 }
 
+const getUnpublishesReq = () => {
+    return {
+        type: Constants.GET_UNPUBLISHES_REQ
+    }
+}
+
+const getUnpublishesSuccess = (unpublishes) => {
+    return {
+        type: Constants.GET_UNPUBLISHES_SUCCESS,
+        unpublishes: unpublishes
+    }
+}
+
+const getUnpublishesError = error => {
+    return {
+        type: Constants.GET_UNPUBLISHES_ERROR,
+        error: error
+    }
+}
+
+const getUnpublishes = () => {
+    return dispatch => {
+        dispatch(getUnpublishesReq());
+
+        axiosClient.get('/v1/unpublishes')
+        .then(res => {
+            console.log(res);
+            dispatch(getUnpublishesSuccess(res.data))
+        })
+        .catch(error => dispatch(getUnpublishesError(error)))
+    }
+}
+
+const deloneUnpublishReq = () => {
+    return {
+        type: Constants.REMOVE_ONE_UNPUBLISH_REQ
+    }
+}
+
+const deloneUnpublishSuccess = () => {
+    return {
+        type: Constants.REMOVE_ONE_UNPUBLISH_SUCCESS,
+    }
+}
+
+const deloneUnpublishError = error => {
+    return {
+        type: Constants.REMOVE_ONE_UNPUBLISH_ERROR,
+        error: error
+    }
+}
+
+const deloneUnpublish = (id) => {
+    return dispatch => {
+        dispatch(deloneUnpublishReq());
+
+        axiosClient.delete(`/v1/unpublishes`, {
+            params: {
+                id: Number(id).toString()
+            }
+        })
+        .then(res => {
+            console.log(res);
+            dispatch(deloneUnpublishSuccess())
+        })
+        .catch(error => dispatch(deloneUnpublishError(error)))
+    }
+}
+
+
+const delUnpublishesReq = () => {
+    return {
+        type: Constants.DELETE_UNPUBLISHES_REQ
+    }
+}
+
+const delUnpublishesSuccess = () => {
+    return {
+        type: Constants.DELETE_UNPUBLISHES_SUCCESS,
+    }
+}
+
+const delUnpublishesError = error => {
+    return {
+        type: Constants.DELETE_UNPUBLISHES_ERROR,
+        error: error
+    }
+}
+
+const delUnpublishes = () => {
+    return dispatch => {
+        dispatch(delUnpublishesReq());
+
+        axiosClient.delete(`/v1/unpublishes`, {
+            params: {
+                type: 'unpublish'
+            }
+        })
+        .then(res => {
+            console.log(res);
+            dispatch(delUnpublishesSuccess())
+        })
+        .catch(error => dispatch(delUnpublishesError(error)))
+    }
+}
 
 export const action = {
     signin,
     signout, 
-    addUnpublish
+    addUnpublish,
+    getUnpublishes,
+    deloneUnpublish,
+    delUnpublishes
 };

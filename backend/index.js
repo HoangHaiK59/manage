@@ -49,7 +49,13 @@ const uri = `mongodb://hai:${password}@cluster0-shard-00-00-rc67p.mongodb.net:27
 
 mongoose.Promise = global.Promise;
 
-mongoose.connect(uri, { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true, serverSelectionTimeoutMS: 5000, replicaSet: 'cluster0-shard-0', authSource: 'admin' })
+mongoose.connect(uri, { 
+    useUnifiedTopology: true, 
+    useNewUrlParser: true, useCreateIndex: true, 
+    serverSelectionTimeoutMS: 5000, 
+    replicaSet: 'cluster0-shard-0', 
+    authSource: 'admin',
+    useFindAndModify: true })
     .then(console.log('connected'))
     .catch(err => console.log(err.reason))
 
@@ -64,8 +70,7 @@ var creativeSchema = new mongoose.Schema({
     id: String,
     message: String,
     type: String,
-    create_at: { type: Date, default: Date.now },
-    id_mongodb: { type: Object }
+    create_at: { type: Date, default: Date.now }
 });
 
 var Creative = mongoose.model('Creative', creativeSchema, 'creative');
@@ -107,19 +112,63 @@ app.get('/', function (req, res) {
     res.send('<h1>Welcome</h1>')
 })
 
-app.post('/unpublish', function (req, res) {
+app.post('/v1/unpublish/new', function (req, res) {
     console.log(req.body);
-    var post = {
-        ...req.body.params.post,
-        id: Number(req.body.params.post.id).toString()
+    var unpublish = {
+        ...req.body.params.unpublish,
+        id: Number(req.body.params.unpublish.id).toString()
     }
-    var creative = new Creative(post);
+    var creative = new Creative(unpublish);
     creative.save(err => {
-        if (err) {console.log(err);res.send({success: false})}
+        if (err) { console.log(err); res.status(400).send({ success: false }) }
         // save
+        res.send({ success: true })
     });
+})
 
-    res.send({success: true})
+app.get('/v1/unpublishes', function (req, res) {
+
+    Creative.find({ type: 'unpublish' }, function (err, docs) {
+        if (err) {
+            console.log(err);
+            res.status(500).send({ message: 'data error' })
+        } else {
+            Creative.count({ type: 'unpublish' }, function (err, count) {
+                if (err) console.log(err);
+                res.send({ docs: docs, count: count })
+            })
+        }
+    })
+})
+
+app.delete('/v1/unpublishes', function (req, res) {
+
+    console.log(req.query.id);
+
+    Creative.deleteOne({id: req.query.id}, function(err, doc){
+        if(err) {
+            res.status(400).send({})
+        }else {
+            res.send({
+                success: true
+            })
+        }
+    })
+})
+
+app.delete('/v1/unpublishes', function (req, res) {
+
+    console.log(req);
+
+    Creative.deleteMany({type: req.query.type}, function(err, doc){
+        if(err) {
+            res.status(400).send({})
+        }else {
+            res.send({
+                success: true
+            })
+        }
+    })
 })
 
 app.listen(8000, function () {

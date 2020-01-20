@@ -4,8 +4,9 @@ const initState = {
     isAuth: false,
     loginStatus: null,
     appInfo: null,
-    creatives: [],
-    error: null, 
+    unpublishes: [],
+    schedules: [],
+    error: null,
 };
 
 const reducer = (state = initState, action) => {
@@ -29,35 +30,47 @@ const reducer = (state = initState, action) => {
             return {
                 ...initState
             }
-        case Constants.ADD_UNPUBLISH:
-            return {
-                ...state,
-                creatives: state.creatives.concat(action.post)
-            }
-        case Constants.REMOVE_ONE_UNPUBLISH:
-            return {
-                ...state,
-                creatives: state.creatives.filter(post => post.id !== action.id)
-            }
         case Constants.CLEAR_UNPUBLISH:
             return {
                 ...state,
-                creatives: []
+                unpublishes: []
             }
-        case Constants.ADD_UNPUBLISH_REQ: 
-        return {
-            ...state
-        }
-        case Constants.ADD_UNPUBLISH_SUCCESS: 
-        return {
-            ...state,
-            creatives: state.creatives.concat(action.creatives)
-        }
-        case Constants.ADD_UNPUBLISH_ERROR: 
-        return {
-            ...state,
-            error: action.error
-        }
+        case Constants.ADD_UNPUBLISH_REQ:
+            return {
+                ...state
+            }
+        case Constants.ADD_UNPUBLISH_SUCCESS:
+            return {
+                ...state
+            }
+        case Constants.ADD_UNPUBLISH_ERROR:
+            return {
+                ...state,
+                error: action.error
+            }
+        case Constants.GET_UNPUBLISHES_REQ:
+            return {
+                ...state
+            }
+        case Constants.GET_UNPUBLISHES_SUCCESS:
+            return {
+                ...state,
+                unpublishes: action.unpublishes
+            }
+        case Constants.GET_UNPUBLISHES_ERROR:
+        case Constants.REMOVE_UNPUBLISH_ERROR:
+        case Constants.DELETE_UNPUBLISHES_ERROR:
+            return {
+                ...state,
+                error: action.error
+            }
+        case Constants.REMOVE_UNPUBLISH_REQ:
+        case Constants.REMOVE_UNPUBLISH_SUCCESS:
+        case Constants.DELETE_UNPUBLISHES_REQ:
+        case Constants.DELETE_UNPUBLISHES_SUCCESS:
+            return {
+                ...state
+            }
         default:
             return state;
     }
