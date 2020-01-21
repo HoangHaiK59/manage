@@ -1,6 +1,7 @@
 import React from 'react';
 import { useUpdateTitle, useVerify } from '../../utils';
 import { Loading } from '../content/loading/loading';
+import { connect } from 'react-redux';
 
 const useFetch = (pageID, access_token) => {
     const [response, setResponse] = React.useState(null);
@@ -21,10 +22,10 @@ const useFetch = (pageID, access_token) => {
     return response;
 }
 
-const Tasks = ({title, loginStatus, handleVerify}) => {
+const Tasks = ({title, handleVerify, ...props}) => {
     useUpdateTitle(title);
-    useVerify(() => handleVerify(loginStatus.authResponse.accessToken));
-    const response = useFetch('111876070200048', loginStatus.authResponse.accessToken);
+    useVerify(() => handleVerify(props.loginStatus.authResponse.accessToken));
+    const response = useFetch('111876070200048', props.loginStatus.authResponse.accessToken);
     if(response )
     return <div>
         <p>{response.id}</p>
@@ -32,4 +33,12 @@ const Tasks = ({title, loginStatus, handleVerify}) => {
     else return <Loading />
 }
 
-export default Tasks;
+const mapState = state => ({
+    loginStatus: state.facebook.loginStatus
+});
+
+const mapDispatch = dispatch => ({
+
+})
+
+export default connect(mapState, mapDispatch) (Tasks);

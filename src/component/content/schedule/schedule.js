@@ -1,11 +1,21 @@
 import React from 'react';
 import { List, Button, Icon, Row, Col, Alert } from 'antd';
-import { Constants } from '../../../store/define';
 import { connect } from 'react-redux';
 import ScheduleModal from '../modal/schedule/schedule';
 import { useUpdateTitle } from '../../../utils';
+import { action } from '../../../store/actions/action';
 
-let count = 0;
+let id = 0;
+
+const useFetch = (count,callback) => {
+    const saveCallbackRef = React.useRef();
+    React.useEffect(() => {
+        saveCallbackRef.current = callback;
+    })
+    React.useEffect(() => {
+        saveCallbackRef.current();
+    },[count])
+}
 
 const Schedule = props => {
     const [visible, setVisible] = React.useState(false);
@@ -13,6 +23,9 @@ const Schedule = props => {
     const [message, setMessage] = React.useState('');
     const [isSuccess, setIsSuccess] = React.useState(false);
     const [isError, setIsError] = React.useState(false);
+    const [count, setCount] = React.useState(1);
+    const [scheduleTime, setScheduleTime] = React.useState(0);
+    useFetch(count, () => props.getSchedules())
     useUpdateTitle(props.title);
 
     const handleShowModal = () => {
@@ -34,13 +47,43 @@ const Schedule = props => {
         setMessage(event.target.value);
     }
 
+    const onChangePicker = (value, dateString) => {
+        console.log('date: ', dateString);
+        console.log((new Date(dateString).getTime() / 1000).toFixed(0));
+        setScheduleTime(parseInt((new Date(dateString).getTime() / 1000).toFixed(0)));
+    }
+
+    const onOkPicker = (value) => {
+        console.log('onOkPicker: ', value);
+    }
+
     const handleSubmit = () => {
-        count += 1;
-        props.addUnPublish({
-            id: count,
-            message: message
-        }
-        );
+        id = schedules.count ? schedules.count + 1 : id+1;
+        props.addSchedule({
+            id: id,
+            message: message,
+            schedule_time: scheduleTime,
+            type: 'schedule'
+        });
+        setTimeout(() => {
+            setCount(count + 1);
+        }, 1000);
+    }
+
+    const handleDelSchedule = (id) => {
+        props.delSchedule(id); 
+        handleNotifySuccess();
+        setTimeout(() => {
+            setCount(count + 1);
+        }, 1000);
+    }
+
+    const handleDelSchedules = () => {
+        props.delSchedules(); 
+        handleNotifySuccess();
+        setTimeout(() => {
+            setCount(count + 1);
+        }, 1000);
     }
 
     const handleNotifySuccess = () => {
@@ -57,23 +100,15 @@ const Schedule = props => {
         }, 2000);
     }
 
-    const resetCount = () => {
-        count = 0;
-    }
-
-    const decrementCount = () => {
-        count = count - 1;
-    }
-
     const notificationSuccess = (
-        <Alert message="Successfully" banner closable type="success"/>
+        <Alert message="Successfully" banner closable type="success" />
     )
 
     const notificationError = (
-        <Alert message="Error" banner closable type="error"/>
+        <Alert message="Error" banner closable type="error" />
     )
 
-    const { unPublishs } = props;
+    const { schedules } = props;
 
     const modal = (
         <div>
@@ -85,41 +120,43 @@ const Schedule = props => {
                 loading={loading}
                 handleChange={handleChange}
                 handleSubmit={handleSubmit}
-                handleNotifySuccess = {handleNotifySuccess}
+                handleNotifySuccess={handleNotifySuccess}
                 handleNotifyError={handleNotifyError}
+                onChangePicker={onChangePicker}
+                onOkPicker={onOkPicker}
             />
         </div>
     );
 
 
-        if (unPublishs.length === 0) {
-            return <div style={{ marginTop: 20 }}>
-                {visible ? modal : null}
-                <Row gutter={16} style={{ textAlign: 'end' }}>
-                    <Col span={24}>
-                        <Button style={{ marginRight: 20 }} type="primary" title="Add" onClick={handleShowModal}>
-                            <Icon type="plus" />
-                        </Button>
-                    </Col>
-                </Row>
-                <Row>
-                    <List >
+    if (Object.keys(schedules).length === 0 || schedules['docs'].length === 0) {
+        return <div style={{ marginTop: 20 }}>
+            {visible ? modal : null}
+            <Row gutter={16} style={{ textAlign: 'end' }}>
+                <Col span={24}>
+                    <Button style={{ marginRight: 20 }} type="primary" title="Add" onClick={handleShowModal}>
+                        <Icon type="plus" />
+                    </Button>
+                </Col>
+            </Row>
+            <Row>
+                <List >
 
-                    </List>
-                </Row>
+                </List>
+            </Row>
 
+        </div>
+    } else
+        return <div>
+            <div style={{ height: 20 }}>
+                {isSuccess ? notificationSuccess : null}
+                {isError ? notificationError : null}
             </div>
-        } else
-            return <div>
-                <div style={{height: 20}}>
-                    {isSuccess ? notificationSuccess: null}
-                    {isError ? notificationError: null}
-                </div>
-                <div style={{ marginTop: 20 }}>
+            <div style={{ marginTop: 20 }}>
                 {visible ? modal : null}
                 <Row gutter={16} style={{ textAlign: 'end' }}>
                     <Col span={24}>
-                        <Button type="danger" title="Delete all" onClick={() => {props.clearUnPublish(); handleNotifySuccess(); resetCount()}}>
+                        <Button type="danger" title="Delete all" onClick={handleDelSchedules}>
                             <Icon type="delete" />
                         </Button>
                         <Button type="primary" style={{ marginLeft: 5 }} title="Add" onClick={handleShowModal}>
@@ -130,7 +167,7 @@ const Schedule = props => {
                 <Row gutter={16}>
                     <Col span={24}>
                         <List
-                            dataSource={unPublishs}
+                            dataSource={schedules.docs}
                             renderItem={item => (
                                 <List.Item key={item.id}>
                                     <List.Item.Meta
@@ -139,7 +176,7 @@ const Schedule = props => {
                                         description={item.id}
                                     />
                                     <div>
-                                        <Button type="danger" title="Delete" onClick={() => {props.removeOneUnpublish(item.id); handleNotifySuccess(); decrementCount()}}>
+                                        <Button type="danger" title="Delete" onClick={() => handleDelSchedule(item.id) }>
                                             <Icon type="delete" />
                                         </Button>
                                         <Button style={{ marginLeft: 5 }} type="primary" title="Send" onClick={() => handleNotifySuccess()}>
@@ -154,17 +191,18 @@ const Schedule = props => {
                     </Col>
                 </Row>
             </div>
-    </div>
+        </div>
 }
 
 const mapState = state => ({
-    unPublishs: state.facebook.unPublishs
+    schedules: state.facebook.schedules
 });
 
 const mapDispatch = dispatch => ({
-    addUnPublish: (post) => dispatch({ type: Constants.ADD_UNPUBLISH, post: post }),
-    removeOneUnpublish: (id) => dispatch({ type: Constants.REMOVE_ONE_UNPUBLISH, id: id }),
-    clearUnPublish: () => dispatch({ type: Constants.CLEAR_UNPUBLISH })
+    addSchedule: (schedule) => dispatch(action.addSchedule(schedule)),
+    delSchedule: (id) => dispatch(action.delSchedule(id)),
+    delSchedules: () => dispatch(action.delSchedules()),
+    getSchedules: () => dispatch(action.getSchedules())
 })
 
 export default connect(mapState, mapDispatch)(Schedule);

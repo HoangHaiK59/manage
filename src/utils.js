@@ -11,8 +11,13 @@ export const IconFont = Icon.createFromIconfontCN({
     scriptUrl: '//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js',
 });
 
-export const useVerify = fn => {
+export const useVerify = (fn) => {
+    const ref = React.useRef();
     React.useEffect(() => {
-        fn();
-    },[fn])
+        ref.current = fn
+    });
+
+    React.useEffect(() => {
+        ref.current()
+    })
 }

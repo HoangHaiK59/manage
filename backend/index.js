@@ -69,6 +69,7 @@ mongoose.connect(uri, {
 var creativeSchema = new mongoose.Schema({
     id: String,
     message: String,
+    schedule_time: Number,
     type: String,
     create_at: { type: Date, default: Date.now }
 });
@@ -112,7 +113,7 @@ app.get('/', function (req, res) {
     res.send('<h1>Welcome</h1>')
 })
 
-app.post('/v1/unpublish/new', function (req, res) {
+app.post('/v1/unpublish', function (req, res) {
     console.log(req.body);
     var unpublish = {
         ...req.body.params.unpublish,
@@ -141,7 +142,7 @@ app.get('/v1/unpublishes', function (req, res) {
     })
 })
 
-app.delete('/v1/unpublishes', function (req, res) {
+app.delete('/v1/unpublish', function (req, res) {
 
     console.log(req.query.id);
 
@@ -158,7 +159,60 @@ app.delete('/v1/unpublishes', function (req, res) {
 
 app.delete('/v1/unpublishes', function (req, res) {
 
-    console.log(req);
+    Creative.deleteMany({type: req.query.type}, function(err, doc){
+        if(err) {
+            res.status(400).send({})
+        }else {
+            res.send({
+                success: true
+            })
+        }
+    })
+});
+
+app.post('/v1/schedule', function(req, res){
+    console.log(req.body);
+    var schedule = {
+        ...req.body.params.schedule,
+        id: Number(req.body.params.schedule.id).toString()
+    }
+    var creative = new Creative(schedule);
+    creative.save(err => {
+        if (err) { console.log(err); res.status(400).send({ success: false }) }
+        // save
+        res.send({ success: true })
+    });
+});
+
+app.get('/v1/schedules', function (req, res) {
+
+    Creative.find({ type: 'schedule' }, function (err, docs) {
+        if (err) {
+            console.log(err);
+            res.status(500).send({ message: 'data error' })
+        } else {
+            Creative.count({ type: 'schedule' }, function (err, count) {
+                if (err) console.log(err);
+                res.send({ docs: docs, count: count })
+            })
+        }
+    })
+})
+
+app.delete('/v1/schedule', function (req, res) {
+    console.log(req.query.id)
+    Creative.deleteOne({id: req.query.id}, function(err, doc){
+        if(err) {
+            res.status(400).send({})
+        }else {
+            res.send({
+                success: true
+            })
+        }
+    })
+})
+
+app.delete('/v1/schedules', function (req, res) {
 
     Creative.deleteMany({type: req.query.type}, function(err, doc){
         if(err) {
@@ -169,7 +223,7 @@ app.delete('/v1/unpublishes', function (req, res) {
             })
         }
     })
-})
+});
 
 app.listen(8000, function () {
     console.log('App listent at port 8000');

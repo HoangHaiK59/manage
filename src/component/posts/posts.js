@@ -2,6 +2,7 @@ import React from 'react';
 import { List, Row, Col, Button } from 'antd';
 import { useUpdateTitle, useVerify } from '../../utils';
 import { Loading } from '../content/loading/loading';
+import { connect } from 'react-redux';
 
 const useFetchPosts = (pageId, access_token, query) => {
     const [response, setResponse] = React.useState(null);
@@ -37,11 +38,11 @@ const useFetchPosts = (pageId, access_token, query) => {
     return response;
 }
 
-const Posts = ({ title, loginStatus, handleVerify }) => {
+const Posts = ({ title, handleVerify, ...props }) => {
     const [query, setQuery] = React.useState(null);
     useUpdateTitle(title);
-    useVerify(() => handleVerify(loginStatus.authResponse.accessToken));
-    const response = useFetchPosts('111876070200048', loginStatus.authResponse.accessToken, query);
+    useVerify(() => handleVerify(props.loginStatus.authResponse.accessToken));
+    const response = useFetchPosts('111876070200048', props.loginStatus.authResponse.accessToken, query);
     const handlePaging = (query) => {
         setQuery(query);
     }
@@ -77,4 +78,12 @@ const Posts = ({ title, loginStatus, handleVerify }) => {
     else return <Loading />
 }
 
-export default Posts;
+const mapState = state => ({
+    loginStatus: state.facebook.loginStatus
+});
+
+const mapDispatch = dispatch => ({
+
+})
+
+export default connect(mapState, mapDispatch)(Posts);

@@ -1,9 +1,8 @@
 import React from 'react';
 import { List, Button, Icon, Row, Col, Alert } from 'antd';
-import { Constants } from '../../../store/define';
 import { connect } from 'react-redux';
 import UnPublishModal from '../modal/unpublish/unpublish';
-import { useUpdateTitle } from '../../../utils';
+import { useUpdateTitle, useVerify } from '../../../utils';
 import { action } from '../../../store/actions/action';
 
 let id = 0;
@@ -27,6 +26,7 @@ const UnPublish = props => {
     const [count, setCount] = React.useState(1);
     useUpdateTitle(props.title);
     useFetch(count, () => {props.getUnpublishes()});
+    useVerify(() => props.handleVerify(props.loginStatus ? props.loginStatus.authResponse.accessToken: ''));
 
     const handleShowModal = () => {
         setVisible(!visible);
@@ -52,6 +52,7 @@ const UnPublish = props => {
         props.addUnPublish({
             id: id,
             message: message,
+            schedule_time: 0,
             type: 'unpublish'
         }
         );
@@ -87,7 +88,7 @@ const UnPublish = props => {
         handleNotifySuccess();
         setTimeout(() => {
             setCount(count + 1);
-        }, 2000);
+        }, 1000);
     }
 
     const handleDeleteUnpublishes = () => {
@@ -95,7 +96,7 @@ const UnPublish = props => {
         handleNotifySuccess();
         setTimeout(() => {
             setCount(count + 1);
-        }, 2000);
+        }, 1000);
     }
 
     const { unpublishes } = props;
@@ -117,7 +118,7 @@ const UnPublish = props => {
     );
 
 
-        if (!unpublishes && unpublishes.docs.length === 0) {
+        if (Object.keys(unpublishes).length === 0 || unpublishes['docs'].length === 0) {
             return <div style={{ marginTop: 20 }}>
                 {visible ? modal : null}
                 <Row gutter={16} style={{ textAlign: 'end' }}>
@@ -183,15 +184,13 @@ const UnPublish = props => {
 }
 
 const mapState = state => ({
-    unpublishes: state.facebook.unpublishes
+    unpublishes: state.facebook.unpublishes,
+    loginStatus: state.facebook.loginStatus
 });
 
 const mapDispatch = dispatch => ({
-    //addUnPublish: (post) => dispatch({ type: Constants.ADD_UNPUBLISH, post: post }),
     addUnPublish: (unpublish) => dispatch(action.addUnpublish(unpublish)),
-    //removeOneUnpublish: (id) => dispatch({ type: Constants.REMOVE_ONE_UNPUBLISH, id: id }),
     delOneUnpublish: (id) => dispatch(action.deloneUnpublish(id)),
-    //clearUnPublish: () => dispatch({ type: Constants.CLEAR_UNPUBLISH }),
     deleteUnpublishes: () => dispatch(action.delUnpublishes()),
     getUnpublishes: () => dispatch(action.getUnpublishes()),
 })

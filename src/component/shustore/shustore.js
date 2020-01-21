@@ -4,6 +4,7 @@ import { useUpdateTitle, useVerify } from '../../utils';
 import { Loading } from '../content/loading/loading';
 
 import { Tabs, List } from 'antd';
+import { connect } from 'react-redux';
 const { TabPane } = Tabs;
 
 const useFetch = (pageId, access_token) => {
@@ -44,11 +45,11 @@ const useFetchRating = (pageId, access_token) => {
     return response;
 }
 
-const Store = ({ title, loginStatus, handleVerify }) => {
+const Store = ({ title, handleVerify, ...props }) => {
     useUpdateTitle(title);
-    useVerify(() => handleVerify(loginStatus.authResponse.accessToken));
-    const response = useFetch('111876070200048', loginStatus.authResponse.accessToken);
-    const rating = useFetchRating('111876070200048', loginStatus.authResponse.accessToken);
+    useVerify(() => handleVerify(props.loginStatus.authResponse.accessToken));
+    const response = useFetch('111876070200048', props.loginStatus.authResponse.accessToken);
+    const rating = useFetchRating('111876070200048', props.loginStatus.authResponse.accessToken);
     console.log(rating)
     if (response && rating)
         return <div style={{ minWidth: 600, minHeight: 600, marginTop: 25 }}>
@@ -78,4 +79,12 @@ const Store = ({ title, loginStatus, handleVerify }) => {
     }
 }
 
-export default Store;
+const mapState = state => ({
+    loginStatus: state.facebook.loginStatus
+});
+
+const mapDispatch = dispatch => ({
+
+})
+
+export default connect(mapState, mapDispatch) (Store);

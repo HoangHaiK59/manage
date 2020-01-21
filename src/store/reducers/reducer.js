@@ -4,8 +4,8 @@ const initState = {
     isAuth: false,
     loginStatus: null,
     appInfo: null,
-    unpublishes: [],
-    schedules: [],
+    unpublishes: {},
+    schedules: {},
     error: null,
 };
 
@@ -60,6 +60,10 @@ const reducer = (state = initState, action) => {
         case Constants.GET_UNPUBLISHES_ERROR:
         case Constants.REMOVE_UNPUBLISH_ERROR:
         case Constants.DELETE_UNPUBLISHES_ERROR:
+        case Constants.ADD_SCHEDULE_ERROR:
+        case Constants.DEL_SCHEDULE_ERROR:
+        case Constants.DEL_SCHEDULES_ERROR:
+        case Constants.GET_SCHEDULES_ERROR:
             return {
                 ...state,
                 error: action.error
@@ -68,8 +72,20 @@ const reducer = (state = initState, action) => {
         case Constants.REMOVE_UNPUBLISH_SUCCESS:
         case Constants.DELETE_UNPUBLISHES_REQ:
         case Constants.DELETE_UNPUBLISHES_SUCCESS:
+        case Constants.ADD_SCHEDULE_REQ:
+        case Constants.ADD_SCHEDULE_SUCCESS:
+        case Constants.DEL_SCHEDULES_REQ:
+        case Constants.DEL_SCHEDULES_SUCCESS:
+        case Constants.DEL_SCHEDULE_REQ:
+        case Constants.DEL_SCHEDULE_SUCCESS:
+        case Constants.GET_SCHEDULES_REQ:
             return {
                 ...state
+            }
+        case Constants.GET_SCHEDULES_SUCCESS:
+            return {
+                ...state,
+                schedules: action.schedules
             }
         default:
             return state;

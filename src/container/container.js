@@ -16,6 +16,7 @@ import { IconFont } from '../utils';
 import Analystic from '../component/analystic/analystic';
 import Creative from '../component/creative/creative';
 import Unpublish from '../component/content/unpublish/unpublish';
+import Schedule from '../component/content/schedule/schedule';
 const { Content, Footer } = Layout;
 
 const Container = props => {
@@ -40,7 +41,7 @@ const Container = props => {
                 access_token: '510765909792429|bc9576b974be7435f3df39bc2152473b'
             },
             function(response) {
-                if(!response.data || response.error) {
+                if(response.data === null || response.data === undefined  || response.error) {
                     signout();
                     history.push('/');
                 }
@@ -60,14 +61,15 @@ const Container = props => {
                 <Col span={23} id="mainview">
                     <div className="container">
                         <Switch>
-                            <PublicRoute path="/" title="Signin" component={Signin} restricted={false} exact/>
-                            <PrivateRoute path="/dashboard" title="Dashboard" isAuth={true} loginStatus={loginStatus} handleVerify={handleVerify}  component={Dashboard} exact />
-                            <PrivateRoute path="/store" title="Store" isAuth={isAuth} loginStatus={loginStatus} handleVerify={handleVerify}  component={Store} exact />
-                            <PrivateRoute path="/tasks" title="Tasks" isAuth={isAuth} loginStatus={loginStatus} handleVerify={handleVerify}  component={Tasks} exact />
-                            <PrivateRoute path="/posts" loginStatus={loginStatus} isAuth={isAuth}  title="Posts" handleVerify={handleVerify} component={Posts} exact />
-                            <PrivateRoute path="/analystic" loginStatus={loginStatus} isAuth={isAuth}  title="Analystic" handleVerify={handleVerify} component={Analystic} exact />
-                            <PrivateRoute path="/creative" loginStatus={loginStatus} isAuth={isAuth}  title="Creative" handleVerify={handleVerify} component={Creative} exact />
-                            <PrivateRoute path="/creative/unpublish" loginStatus={loginStatus} isAuth={isAuth}  title="Unpublish" handleVerify={handleVerify} component={Unpublish} exact />
+                            <PublicRoute path="/" title="Signin" component={Signin} isAuth={false} restricted={false} exact/>
+                            <PrivateRoute path="/dashboard" title="Dashboard" isAuth={true}  handleVerify={handleVerify} component={Dashboard} exact />
+                            <PrivateRoute path="/store" title="Store" isAuth={isAuth}  handleVerify={handleVerify}  component={Store} exact />
+                            <PrivateRoute path="/tasks" title="Tasks" isAuth={isAuth}  handleVerify={handleVerify}  component={Tasks} exact />
+                            <PrivateRoute path="/posts"  isAuth={isAuth}  title="Posts" handleVerify={handleVerify} component={Posts} exact />
+                            <PrivateRoute path="/analystic" isAuth={isAuth}  title="Analystic" handleVerify={handleVerify} component={Analystic} exact />
+                            <PrivateRoute path="/creative" isAuth={isAuth}  title="Creative" handleVerify={handleVerify} component={Creative} exact />
+                            <PrivateRoute path="/creative/unpublish" isAuth={isAuth}  title="Unpublish" handleVerify={handleVerify} component={Unpublish} exact />
+                            <PrivateRoute path="/creative/schedule" isAuth={isAuth}  title="Schedule" handleVerify={handleVerify} component={Schedule} exact />
                         </Switch>
                     </div>
                 </Col>

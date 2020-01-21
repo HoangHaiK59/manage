@@ -78,7 +78,7 @@ const Creative = props => {
                             style={{ height: 150, width: 200, textAlign: 'center' }}
                             title="Schedule Publication"
                             bordered={false}
-
+                            onClick={() => history.push('/creative/schedule')}
                         >
                             <Button type="primary">
                                 &#43;

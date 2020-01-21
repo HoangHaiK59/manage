@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button, Input, Form, Icon } from 'antd';
+import { Modal, Button, Input, Form, Icon, DatePicker } from 'antd';
 import PictureWall from '../../upload/upload';
 
 const MessageForm = props => {
@@ -10,6 +10,7 @@ const MessageForm = props => {
                 rules: [{ required: true, message: 'Please input your message!' }],
             })(
                 <Input
+                    id="message"
                     prefix={<Icon type="message" style={{ color: 'rgba(0,0,0,.25)' }} />}
                     placeholder="Message"
                     onChange={props.handleChange}
@@ -17,14 +18,10 @@ const MessageForm = props => {
             )}
         </Form.Item>
         <Form.Item>
-            {getFieldDecorator('message', {
+            {getFieldDecorator('schedule_time', {
                 rules: [{ required: true, message: 'Please input your schedule publication time!' }],
             })(
-                <Input
-                    prefix={<Icon type="time" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    placeholder="Schedule Publication"
-                    onChange={props.handleChange}
-                />,
+                <DatePicker id="schedule_time" showTime placeholder="Select schedule time" onChange={props.onChangePicker} onOk={props.onOkPicker} />
             )}
         </Form.Item>
         <PictureWall />
@@ -33,7 +30,7 @@ const MessageForm = props => {
 
 const WrappedForm = Form.create({ name: 'message' })(MessageForm);
 
-const SchedulePublishModal = ({ visible, title, loading, handleOk, handleCancel, handleChange, handleSubmit, handleNotifySuccess, handleNotifyError }) => {
+const SchedulePublishModal = ({ visible, title, loading, handleOk, handleCancel, handleChange, handleSubmit, handleNotifySuccess, handleNotifyError, onChangePicker, onOkPicker }) => {
     return <div>
         <Modal
             visible={visible}
@@ -48,7 +45,7 @@ const SchedulePublishModal = ({ visible, title, loading, handleOk, handleCancel,
                     Submit
             </Button>
             ]}>
-            <WrappedForm handleChange={handleChange} handleSubmit={handleSubmit} />
+            <WrappedForm handleChange={handleChange} handleSubmit={handleSubmit} onChangePicker={onChangePicker} onOkPicker={onOkPicker} />
         </Modal>
     </div>
 }

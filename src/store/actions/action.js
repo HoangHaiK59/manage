@@ -102,7 +102,7 @@ const addUnpublishError = (error) => {
 const addUnpublish = (unpublish) => {
     return dispatch => {
         dispatch(addUnpublishReq())
-        axiosClient.post('/v1/unpublish/new', {
+        axiosClient.post('/v1/unpublish', {
             params: {
                 unpublish: unpublish
             }
@@ -150,19 +150,19 @@ const getUnpublishes = () => {
 
 const deloneUnpublishReq = () => {
     return {
-        type: Constants.REMOVE_ONE_UNPUBLISH_REQ
+        type: Constants.REMOVE_UNPUBLISH_REQ
     }
 }
 
 const deloneUnpublishSuccess = () => {
     return {
-        type: Constants.REMOVE_ONE_UNPUBLISH_SUCCESS,
+        type: Constants.REMOVE_UNPUBLISH_SUCCESS,
     }
 }
 
 const deloneUnpublishError = error => {
     return {
-        type: Constants.REMOVE_ONE_UNPUBLISH_ERROR,
+        type: Constants.REMOVE_UNPUBLISH_ERROR,
         error: error
     }
 }
@@ -171,7 +171,7 @@ const deloneUnpublish = (id) => {
     return dispatch => {
         dispatch(deloneUnpublishReq());
 
-        axiosClient.delete(`/v1/unpublishes`, {
+        axiosClient.delete(`/v1/unpublish`, {
             params: {
                 id: Number(id).toString()
             }
@@ -221,11 +221,134 @@ const delUnpublishes = () => {
     }
 }
 
+const addScheduleReq = () => ({
+    type: Constants.ADD_SCHEDULE_REQ
+});
+
+const addScheduleSuccess = () => ({
+    type: Constants.ADD_SCHEDULE_SUCCESS
+});
+
+const addScheduleError = error => ({
+    type: Constants.ADD_SCHEDULE_ERROR,
+    error: error
+})
+
+const addSchedule = (schedule) => {
+    return dispatch => {
+        dispatch(addScheduleReq());
+
+        axiosClient.post('/v1/schedule',{
+            params: {
+                schedule: schedule
+            }
+        })
+        .then(res => {
+            console.log(res);
+            if(res.data.success) {
+                dispatch(addScheduleSuccess())
+            }else {
+                dispatch(addScheduleError(res.data))
+            }
+        })
+        .catch(error => dispatch(addScheduleError(error)))
+    }
+}
+
+
+const delScheduleReq = () => ({
+    type: Constants.DEL_SCHEDULE_REQ
+});
+
+const delScheduleSuccess = () => ({
+    type: Constants.DEL_SCHEDULE_SUCCESS
+});
+
+const delScheduleError = error => ({
+    type: Constants.DEL_SCHEDULE_ERROR,
+    error: error
+});
+
+const delSchedule = (id) => {
+    return dispatch => {
+        dispatch(delScheduleReq());
+
+        axiosClient.delete('/v1/schedule', {
+            params: {
+                id: id
+            }
+        })
+        .then(res => {
+            console.log(res);
+            dispatch(delScheduleSuccess());
+        })
+        .catch(error => dispatch(delScheduleError(error)))
+    }
+}
+
+const delSchedulesReq = () => ({
+    type: Constants.DEL_SCHEDULES_REQ
+});
+
+const delSchedulesSuccess = () => ({
+    type: Constants.DEL_SCHEDULES_SUCCESS
+});
+
+const delSchedulesError = error => ({
+    type: Constants.DEL_SCHEDULES_ERROR,
+    error: error
+});
+
+const delSchedules = () => {
+    return dispatch => {
+        dispatch(delSchedulesReq());
+
+        axiosClient.delete('/v1/schedules', {
+            params: {
+                type: 'schedule'
+            }
+        })
+        .then(res => dispatch(delSchedulesSuccess()))
+        .catch(error => dispatch(delSchedulesError(error)))
+    }
+};
+
+const getSchedulesReq = () => ({
+    type: Constants.GET_SCHEDULES_REQ
+});
+
+const getSchedulesSuccess = (schedules) => ({
+    type: Constants.GET_SCHEDULES_SUCCESS,
+    schedules: schedules
+});
+
+const getSchedulesError = error => ({
+    type: Constants.GET_SCHEDULES_ERROR,
+    error: error
+});
+
+const getSchedules = () => {
+    return dispatch => {
+        dispatch(getSchedulesReq());
+
+        axiosClient.get('/schedules')
+        .then(res => {
+            dispatch(getSchedulesSuccess(res.data));
+        })
+        .catch(error => dispatch(getSchedulesError(error)))
+    }
+}
+
+
 export const action = {
     signin,
     signout, 
     addUnpublish,
     getUnpublishes,
     deloneUnpublish,
-    delUnpublishes
+    delUnpublishes,
+    addSchedule,
+    delSchedule,
+    delSchedules,
+    getSchedules
 };

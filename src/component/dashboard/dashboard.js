@@ -1,11 +1,11 @@
 import React from 'react';
 import { Card, Col, Row } from 'antd';
 import { useUpdateTitle, useVerify } from '../../utils';
+import { connect } from 'react-redux';
 
-const Dashboard = ({title, loginStatus,handleVerify, history}) => {
+const Dashboard = ({title,handleVerify, history,...props}) => {
     useUpdateTitle(title);
-    useVerify(() => handleVerify(loginStatus ? loginStatus.authResponse.accessToken: ''));
-    //handleVerify(loginStatus.authResponse.token);
+    useVerify(() => handleVerify(props.loginStatus ? props.loginStatus.authResponse.accessToken: ''));
     return <div style={{ position: 'absolute', top: '50%', left: '50%', width: '95%', transform: 'translate(-50%,-50%)' }}>
         <Row draggable gutter={16}>
             <Col span={6}>
@@ -86,4 +86,12 @@ const Dashboard = ({title, loginStatus,handleVerify, history}) => {
     </div>
 }
 
-export default Dashboard;
+const mapState = state => ({
+    loginStatus: state.facebook.loginStatus
+});
+
+const mapDispatch = dispatch => ({
+
+})
+
+export default connect(mapState,mapDispatch) (Dashboard);
